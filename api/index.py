@@ -9,7 +9,7 @@ def home():
     return 'Hello, World!'
 
 
-@app.route('/subscribe')
+@app.route('/api/v1/client/subscribe')
 def sub():
     token = request.args.get('token')
     flag = request.args.get('flag')
