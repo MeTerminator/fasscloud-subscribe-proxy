@@ -15,7 +15,7 @@ def sub():
     if not token:
         return jsonify({'error': 'Missing required parameter: token'}), 400
 
-    target_url = 'https://dash.metc.uk/api/v1/client/subscribe'
+    target_url = 'https://server.metc.uk/sub.php'
     params = {'token': token}
     if flag:
         params['flag'] = flag
