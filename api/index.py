@@ -28,4 +28,4 @@ def sub():
         response = requests.get(target_url, params=params, headers=headers)
         return (response.content, response.status_code, response.headers.items())
     except requests.RequestException as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'error': str(e)})
