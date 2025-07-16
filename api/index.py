@@ -1,11 +1,13 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, Response, redirect
 import requests
 
 app = Flask(__name__)
 
+
 @app.route('/')
 def home():
     return 'Hello, World!'
+
 
 @app.route('/sub')
 def sub():
@@ -13,19 +15,21 @@ def sub():
     flag = request.args.get('flag')
 
     if not token:
-        return jsonify({'error': 'Missing required parameter: token'}), 400
+        return redirect('/')
 
-    target_url = 'https://server.metc.uk/sub.php'
+    target_url = 'https://sub.metc.uk'
     params = {'token': token}
     if flag:
         params['flag'] = flag
 
-    headers = {}
-    for key, value in request.headers:
-        headers[key] = value
+    user_agent = request.headers.get('User-Agent', '')
+    headers = {'User-Agent': user_agent} if user_agent else {}
 
     try:
         response = requests.get(target_url, params=params, headers=headers)
-        return (response.content, response.status_code, response.headers.items())
+        content = response.text
+        status_code = response.status_code
+        content_type = response.headers.get('Content-Type', 'text/plain')
+        return Response(content, status=status_code, content_type=content_type)
     except requests.RequestException as e:
-        return jsonify({'error': str(e)})
+        return redirect('/')
